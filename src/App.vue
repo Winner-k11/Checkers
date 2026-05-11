@@ -1,6 +1,9 @@
 <script setup>
-import Chekerpieces from './components/Chekerpieces.vue';
+import Board from './components/Board.vue'
+import Chekerpieces from './components/Chekerpieces.vue'
 </script>
-  <template>
-    <Chekerpieces></Chekerpieces>
-  </template>
+
+<template>
+  <Board />
+  <Chekerpieces />
+</template>
