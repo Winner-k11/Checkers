@@ -2,24 +2,34 @@
 import { ref } from 'vue'
 import Chekerpieces from './Chekerpieces.vue' // ✅ import component
 
-const BOARD_SIZE = 8
+const pieces = ref([])
 
-const createBoard = () => {
-  const board = []
-  for (let row = 0; row < BOARD_SIZE; row++) {
-    const rowCells = []
-    for (let col = 0; col < BOARD_SIZE; col++) {
-      const isDark = (row + col) % 2 === 1
+const setupPieces = () => {
+  const temp = []
 
-      rowCells.push({
-        row,
-        col,
-        isDark
-      })
-    }
-    board.push(rowCells)
-  }
-  return board
+  board.value.forEach(row => {
+    row.forEach(cell => {
+      if (cell.isDark && cell.row <= 2) {
+        temp.push({
+          row: cell.row,
+          col: cell.col,
+          color: 'red',
+          king: false
+        })
+      }
+
+      if (cell.isDark && cell.row >= 5) {
+        temp.push({
+          row: cell.row,
+          col: cell.col,
+          color: 'black',
+          king: false
+        })
+      }
+    })
+  })
+
+  pieces.value = temp
 }
 
 const board = ref(createBoard())
@@ -56,9 +66,24 @@ const setupPieces = () => {
 
   pieces.value = temp
 }
-
+ 
 setupPieces()
 </script>
+
+
+
+
+<div
+  v-for="cell in row"
+  :key="`${cell.row}-${cell.col}`"
+  class="cell"
+  :class="{
+    dark: cell.isDark,
+    light: !cell.isDark
+  }"
+>
+  <Chekerpieces :cell="cell" :pieces="pieces" />
+</div>
 
 <template>
   <div class="game-container">
