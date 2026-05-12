@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 
-const BOARD_SIZE = 8
 
+const BOARD_SIZE = 8
 const createBoard = () => {
   const board = []
   for (let row = 0; row < BOARD_SIZE; row++) {
@@ -22,6 +22,7 @@ const createBoard = () => {
 }
 
 const board = ref(createBoard())
+
 </script>
 
 <template>
