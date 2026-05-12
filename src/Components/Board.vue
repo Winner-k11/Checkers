@@ -1,46 +1,30 @@
 <script setup>
 import { ref } from 'vue'
-import Chekerpieces from './Chekerpieces.vue' // ✅ import component
+import Chekerpieces from './Chekerpieces.vue'
 
-const pieces = ref([])
+const BOARD_SIZE = 8
 
-const setupPieces = () => {
-  const temp = []
-
-  board.value.forEach(row => {
-    row.forEach(cell => {
-      if (cell.isDark && cell.row <= 2) {
-        temp.push({
-          row: cell.row,
-          col: cell.col,
-          color: 'red',
-          king: false
-        })
-      }
-
-      if (cell.isDark && cell.row >= 5) {
-        temp.push({
-          row: cell.row,
-          col: cell.col,
-          color: 'black',
-          king: false
-        })
-      }
-    })
-  })
-  console.log(pieces.value)
-
-  pieces.value = temp
+const createBoard = () => {
+  const board = []
+  for (let row = 0; row < BOARD_SIZE; row++) {
+    const rowCells = []
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      rowCells.push({
+        row,
+        col,
+        isDark: (row + col) % 2 === 1
+      })
+    }
+    board.push(rowCells)
+  }
+  return board
 }
 
 const board = ref(createBoard())
-
-// ✅ ADD PIECES LOGIC HERE
 const pieces = ref([])
 
 const setupPieces = () => {
   const temp = []
-
   board.value.forEach(row => {
     row.forEach(cell => {
       // RED (top)
@@ -52,7 +36,6 @@ const setupPieces = () => {
           king: false
         })
       }
-
       // BLACK (bottom)
       if (cell.isDark && cell.row >= 5) {
         temp.push({
@@ -64,28 +47,14 @@ const setupPieces = () => {
       }
     })
   })
-
   pieces.value = temp
 }
- 
+
 setupPieces()
 </script>
 
 
 
-
-<div
-  v-for="cell in row"
-  :key="`${cell.row}-${cell.col}`"
-  class="cell"
-  :class="{
-    dark: cell.isDark,
-    light: !cell.isDark
-  }"
->
-<div style="color: red"></div>
-
-  
 
 <template>
   <div class="game-container">
