@@ -1,7 +1,7 @@
 <script setup>
-import Board from './Components/Board.vue'
+import Movement from './Components/Movement.vue'
 </script>
 
 <template>
-  <Board />
+  <Movement />
 </template>
