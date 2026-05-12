@@ -27,6 +27,7 @@ const setupPieces = () => {
       }
     })
   })
+  console.log(pieces.value)
 
   pieces.value = temp
 }
@@ -47,8 +48,9 @@ setupPieces()
     light: !cell.isDark
   }"
 >
-  <Chekerpieces :cell="cell" :pieces="pieces" />
-</div>
+<div style="color: red"></div>
+
+  
 
 <template>
   <div class="game-container">
