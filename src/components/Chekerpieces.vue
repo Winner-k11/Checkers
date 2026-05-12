@@ -19,12 +19,15 @@ defineProps(['cell', 'pieces'])
   height: 40px;
   border-radius: 50%;
 }
+
 .red {
   background-color: red;
 }
+
 .black {
   background-color: black;
 }
+
 .king {
   border: 3px solid gold;
 }

@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-
+import Chekerpieces from './Chekerpieces.vue' // ✅ import component
 
 const BOARD_SIZE = 8
+
 const createBoard = () => {
   const board = []
   for (let row = 0; row < BOARD_SIZE; row++) {
@@ -23,11 +24,46 @@ const createBoard = () => {
 
 const board = ref(createBoard())
 
+// ✅ ADD PIECES LOGIC HERE
+const pieces = ref([])
+
+const setupPieces = () => {
+  const temp = []
+
+  board.value.forEach(row => {
+    row.forEach(cell => {
+      // RED (top)
+      if (cell.isDark && cell.row <= 2) {
+        temp.push({
+          row: cell.row,
+          col: cell.col,
+          color: 'red',
+          king: false
+        })
+      }
+
+      // BLACK (bottom)
+      if (cell.isDark && cell.row >= 5) {
+        temp.push({
+          row: cell.row,
+          col: cell.col,
+          color: 'black',
+          king: false
+        })
+      }
+    })
+  })
+
+  pieces.value = temp
+}
+
+setupPieces()
 </script>
 
 <template>
   <div class="game-container">
     <h1>Checkers!</h1>
+
     <div class="board">
       <div v-for="(row, rowIndex) in board" :key="rowIndex" class="row">
         <div
@@ -35,10 +71,13 @@ const board = ref(createBoard())
           :key="`${cell.row}-${cell.col}`"
           class="cell"
           :class="{
-            'dark': cell.isDark,
-            'light': !cell.isDark
+            dark: cell.isDark,
+            light: !cell.isDark
           }"
-        />
+        >
+          <!-- ✅ THIS LINE WAS MISSING -->
+          <Chekerpieces :cell="cell" :pieces="pieces" />
+        </div>
       </div>
     </div>
   </div>
@@ -50,17 +89,10 @@ const board = ref(createBoard())
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-h1 {
-  margin-bottom: 20px;
-  color: #333;
 }
 
 .board {
   border: 4px solid #333;
-  display: inline-block;
 }
 
 .row {
@@ -73,7 +105,6 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 }
 
 .cell.light {
@@ -83,5 +114,4 @@ h1 {
 .cell.dark {
   background-color: #b58863;
 }
-
 </style>
