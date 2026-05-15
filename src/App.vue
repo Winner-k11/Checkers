@@ -8,16 +8,28 @@ const gameState = ref('menu') // 'menu', 'playing', 'gameOver'
 const winner = ref(null)
 const redScore = ref(0)
 const blackScore = ref(0)
+const redCaptured = ref(0)
+const blackCaptured = ref(0)
+const redRemaining = ref(0)
+const blackRemaining = ref(0)
 
 const startGame = () => {
   redScore.value = 0
   blackScore.value = 0
+  redCaptured.value = 0
+  blackCaptured.value = 0
+  redRemaining.value = 0
+  blackRemaining.value = 0
   winner.value = null
   gameState.value = 'playing'
 }
 
-const endGame = (winnerColor) => {
+const endGame = (winnerColor, rCaptured, bCaptured, rRemaining, bRemaining) => {
   winner.value = winnerColor
+  redCaptured.value = rCaptured
+  blackCaptured.value = bCaptured
+  redRemaining.value = rRemaining
+  blackRemaining.value = bRemaining
   if (winnerColor === 'red') {
     redScore.value++
   } else {
@@ -45,6 +57,10 @@ const returnToMenu = () => {
       :winner="winner"
       :red-score="redScore"
       :black-score="blackScore"
+      :red-captured="redCaptured"
+      :black-captured="blackCaptured"
+      :red-remaining="redRemaining"
+      :black-remaining="blackRemaining"
       @play-again="startGame"
       @return-home="returnToMenu"
     />

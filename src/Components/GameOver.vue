@@ -1,10 +1,22 @@
 <script setup>
 import { computed } from 'vue'
 
-defineProps({
+const {
+  winner,
+  redScore,
+  blackScore,
+  redCaptured,
+  blackCaptured,
+  redRemaining,
+  blackRemaining
+} = defineProps({
   winner: String,
   redScore: Number,
-  blackScore: Number
+  blackScore: Number,
+  redCaptured: Number,
+  blackCaptured: Number,
+  redRemaining: Number,
+  blackRemaining: Number
 })
 
 defineEmits(['play-again', 'return-home'])
@@ -31,7 +43,7 @@ const winnerAchievements = computed(() => {
 </script>
 
 <template>
-  <div class="gameover-container">
+  <div class="gameover-container" v-if="winner">
     <div class="gameover-card">
       <div class="header">
         <h1 class="title">GAME OVER!</h1>
@@ -39,7 +51,7 @@ const winnerAchievements = computed(() => {
 
       <div class="winner-section" :class="winner">
         <div class="winner-text">
-          <span class="winner-name">{{ winner.toUpperCase() }}</span>
+          <span class="winner-name">{{ winner.toUpperCase() }} PLAYER</span>
           <span class="winner-title">WINS!</span>
         </div>
         <div class="trophy">🏆</div>
@@ -54,6 +66,38 @@ const winnerAchievements = computed(() => {
         <div class="score-item black">
           <div class="score-label">Black Player</div>
           <div class="score-value">{{ blackScore }}</div>
+        </div>
+      </div>
+
+      <div class="game-stats">
+        <h3>📊 Game Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-card red-stat">
+            <div class="stat-header">🔴 RED</div>
+            <div class="stat-detail">
+              <span class="stat-label">Captured:</span>
+              <span class="stat-number">{{ redCaptured }}</span>
+            </div>
+            <div class="stat-detail">
+              <span class="stat-label">Remaining:</span>
+              <span class="stat-number">{{ redRemaining }}</span>
+            </div>
+          </div>
+          <div class="stat-card black-stat">
+            <div class="stat-header">⚫ BLACK</div>
+            <div class="stat-detail">
+              <span class="stat-label">Captured:</span>
+              <span class="stat-number">{{ blackCaptured }}</span>
+            </div>
+            <div class="stat-detail">
+              <span class="stat-label">Remaining:</span>
+              <span class="stat-number">{{ blackRemaining }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="winner-stats" :class="winner">
+          <span class="winner-trophy">🏆</span>
+          <span>{{ winner.toUpperCase() }} won with {{ winner === 'red' ? redRemaining : blackRemaining }} pieces & captured {{ winner === 'red' ? redCaptured : blackCaptured }} enemies!</span>
         </div>
       </div>
 
@@ -334,5 +378,104 @@ const winnerAchievements = computed(() => {
 
 .btn:active {
   transform: translateY(-1px);
+}
+
+.game-stats {
+  background: #f0f8ff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  border: 2px solid #87ceeb;
+}
+
+.game-stats h3 {
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.stat-card {
+  padding: 15px;
+  border-radius: 6px;
+  background: white;
+  border: 2px solid #ddd;
+  text-align: center;
+}
+
+.stat-card.red-stat {
+  border-color: #c41e3a;
+}
+
+.stat-card.black-stat {
+  border-color: #000;
+}
+
+.stat-header {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.stat-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 0.9rem;
+}
+
+.stat-label {
+  color: #666;
+  font-weight: 600;
+}
+
+.stat-number {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #000;
+}
+
+.stat-card.red-stat .stat-number {
+  color: #c41e3a;
+}
+
+.stat-card.black-stat .stat-number {
+  color: #000;
+}
+
+.winner-stats {
+  background: white;
+  padding: 12px 15px;
+  border-radius: 6px;
+  border-left: 4px solid #ffd700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+  margin-top: 10px;
+}
+
+.winner-stats.red {
+  color: #c41e3a;
+}
+
+.winner-stats.black {
+  color: #000;
+}
+
+.winner-trophy {
+  font-size: 1.3rem;
+  animation: bounce 1.5s infinite;
 }
 </style>

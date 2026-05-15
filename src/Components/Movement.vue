@@ -6,9 +6,12 @@ const currentTurn = ref('red')
 const selectedPiece = ref(null)
 const pieces = ref([])
 const forceJump = ref(true)
+const firstMoveOfGame = ref(false)
 const redCaptured = ref(0)
 const blackCaptured = ref(0)
 const moveCount = ref(0)
+const gameMode = ref('Classic')
+const gameDifficulty = ref('Normal')
 
 defineProps(['redScore', 'blackScore'])
 const emit = defineEmits(['game-over'])
@@ -43,6 +46,7 @@ const resetPieces = () => {
   redCaptured.value = 0
   blackCaptured.value = 0
   moveCount.value = 0
+  firstMoveOfGame.value = false
 }
 
 resetPieces()
@@ -226,6 +230,7 @@ const movePiece = cell => {
     selectedPiece.value = null
   }
   moveCount.value++
+  firstMoveOfGame.value = true
 }
 
 const checkGameOver = () => {
@@ -284,7 +289,9 @@ watch([pieces, currentTurn], () => {
   const winner = checkGameOver()
   if (winner) {
     setTimeout(() => {
-      emit('game-over', winner)
+      const redPieces = pieces.value.filter(p => p.color === 'red').length
+      const blackPieces = pieces.value.filter(p => p.color === 'black').length
+      emit('game-over', winner, redCaptured.value, blackCaptured.value, redPieces, blackPieces)
     }, 500)
   }
 }, { deep: true })
@@ -383,8 +390,9 @@ watch([pieces, currentTurn], () => {
       <!-- CONTROLS BAR -->
       <div class="controls-bar">
         <label class="control-item">
-          <input type="checkbox" v-model="forceJump" />
+          <input type="checkbox" v-model="forceJump" :disabled="firstMoveOfGame" />
           <span>Force Jump</span>
+          <span v-if="firstMoveOfGame" class="lock-icon">🔒</span>
         </label>
         <div class="control-status">
           {{ anyCaptureAvailable ? '⚠️ Capture!' : '✓ OK' }}
@@ -458,7 +466,7 @@ watch([pieces, currentTurn], () => {
 
 /* SIDE PANELS */
 .side-panel {
-  width: 280px;
+  width: 240px;
   background: #ffffff;
   border-right: 1px solid #e0e0e0;
   padding: 20px;
@@ -748,8 +756,8 @@ watch([pieces, currentTurn], () => {
   cursor: pointer;
   transition: all 0.15s ease;
   position: relative;
-  min-width: 45px;
-  min-height: 45px;
+  min-width: 70px;
+  min-height: 70px;
 }
 
 .light {
@@ -863,6 +871,16 @@ watch([pieces, currentTurn], () => {
   accent-color: #000;
 }
 
+.control-item input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.lock-icon {
+  font-size: 0.8rem;
+  margin-left: 4px;
+}
+
 .control-status {
   font-weight: 700;
   font-size: 0.9rem;
@@ -890,26 +908,26 @@ watch([pieces, currentTurn], () => {
 /* RESPONSIVE */
 @media (max-width: 1400px) {
   .side-panel {
-    width: 240px;
+    width: 220px;
     padding: 15px;
   }
 
   .square {
-    min-width: 40px;
-    min-height: 40px;
+    min-width: 60px;
+    min-height: 60px;
   }
 }
 
 @media (max-width: 1200px) {
   .side-panel {
-    width: 220px;
+    width: 200px;
     padding: 12px;
     gap: 15px;
   }
 
   .square {
-    min-width: 35px;
-    min-height: 35px;
+    min-width: 50px;
+    min-height: 50px;
   }
 
   .panel-title {
